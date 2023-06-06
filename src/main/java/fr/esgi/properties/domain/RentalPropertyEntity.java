@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.mapping.Value;
-
-import javax.annotation.processing.Generated;
 
 @Getter
 @Setter
@@ -15,7 +12,7 @@ import javax.annotation.processing.Generated;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "rental_property")
-public class RentalProperty {
+public class RentalPropertyEntity {
 
     @GeneratedValue
     @Id
