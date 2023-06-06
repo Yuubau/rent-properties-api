@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "property_type")
-public class PropertyType {
+public class PropertyTypeEntity {
 
     @GeneratedValue
     @Id
@@ -21,4 +21,17 @@ public class PropertyType {
 
     @Column(name = "designation", length = 5)
     private String designation;
+
+    public PropertyTypeEntity() {
+
+    }
+
+    public PropertyTypeEntity(String designation) {
+        this.designation = designation;
+    }
+
+    public PropertyTypeEntity(Integer id, String designation) {
+        this.id = id;
+        this.designation = designation;
+    }
 }

@@ -6,13 +6,87 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "rental_property")
 public class RentalPropertyEntity {
+
+    public RentalPropertyEntity() {
+
+    }
+
+    public RentalPropertyEntity(String description,
+                                String town,
+                                String address,
+                                PropertyTypeEntity propertyType,
+                                double rentAmount,
+                                double securityDepositAmount,
+                                double area,
+                                int numberOfBedrooms,
+                                int floorNumber,
+                                int numberOfFloors,
+                                char constructionYear,
+                                EnergyClassificationEntity energyClassification,
+                                boolean hasElevator,
+                                boolean hasIntercom,
+                                boolean hasBalcony,
+                                boolean hasParkingSpace) {
+        this.description = description;
+        this.town = town;
+        this.address = address;
+        this.propertyType = propertyType;
+        this.rentAmount = rentAmount;
+        this.securityDepositAmount = securityDepositAmount;
+        this.area = area;
+        this.numberOfBedrooms = numberOfBedrooms;
+        this.floorsNumber = floorNumber;
+        this.numberOfFloors = numberOfFloors;
+        this.constructionYear = constructionYear;
+        this.energyClassification = energyClassification;
+        this.hasElevator = hasElevator;
+        this.hasIntercom = hasIntercom;
+        this.hasBalcony = hasBalcony;
+        this.hasParkingSpace = hasParkingSpace;
+    }
+
+    public RentalPropertyEntity(Integer id,
+                                String description,
+                                String town,
+                                String address,
+                                PropertyTypeEntity propertyType,
+                                double rentAmount,
+                                double securityDepositAmount,
+                                double area,
+                                int numberOfBedrooms,
+                                int floorNumber,
+                                int numberOfFloors,
+                                char constructionYear,
+                                EnergyClassificationEntity energyClassification,
+                                boolean hasElevator,
+                                boolean hasIntercom,
+                                boolean hasBalcony,
+                                boolean hasParkingSpace) {
+        this.id = id;
+        this.description = description;
+        this.town = town;
+        this.address = address;
+        this.propertyType = propertyType;
+        this.rentAmount = rentAmount;
+        this.securityDepositAmount = securityDepositAmount;
+        this.area = area;
+        this.numberOfBedrooms = numberOfBedrooms;
+        this.floorsNumber = floorNumber;
+        this.numberOfFloors = numberOfFloors;
+        this.constructionYear = constructionYear;
+        this.energyClassification = energyClassification;
+        this.hasElevator = hasElevator;
+        this.hasIntercom = hasIntercom;
+        this.hasBalcony = hasBalcony;
+        this.hasParkingSpace = hasParkingSpace;
+    }
 
     @GeneratedValue
     @Id
@@ -33,7 +107,7 @@ public class RentalPropertyEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "property_type_id")
-    private PropertyType propertyType;
+    private PropertyTypeEntity propertyType;
 
 
     @Column(name = "rent_amount")
@@ -55,13 +129,15 @@ public class RentalPropertyEntity {
     @Column(name = "floors_number")
     private Integer floorsNumber;
 
+    @Column(name = "number_of_floors")
+    private Integer numberOfFloors;
 
     @Column(name = "construction_year", length = 4)
     private Character constructionYear;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "energy_classification_id")
-    private EnergyClassification energyClassification;
+    private EnergyClassificationEntity energyClassification;
 
     @Column(name = "has_elevator")
     private Boolean hasElevator;

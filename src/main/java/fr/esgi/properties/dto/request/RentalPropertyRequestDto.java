@@ -15,7 +15,7 @@ public record RentalPropertyRequestDto(
         @NotNull int bedroomsCount,
         int floorNumber,
         int numberOfFloors,
-        @NotNull int constructionYear,
+        @NotNull char constructionYear,
         @NotNull String energyClassification,
         @NotNull boolean hasElevator,
         @NotNull boolean hasIntercom,
