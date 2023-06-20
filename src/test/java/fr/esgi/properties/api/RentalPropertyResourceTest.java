@@ -60,7 +60,7 @@ class RentalPropertyResourceTest {
         when(rentalPropertyRepository.findAll()).thenReturn(rentalPropertyEntities);
         when(rentalPropertyDtoMapper.mapToDtoList(rentalPropertyEntities)).thenReturn(rentalPropertyResponseList);
 
-        mockMvc.perform(get("/api/rental-properties"))
+        mockMvc.perform(get("/rent-properties-api/rental-properties"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(readResource(rentalProperties)));
 
@@ -79,7 +79,7 @@ class RentalPropertyResourceTest {
         when(rentalPropertyRepository.findById(Integer.valueOf(id))).thenReturn(Optional.of(rentalPropertyEntity));
         when(rentalPropertyDtoMapper.mapToDto(rentalPropertyEntity)).thenReturn(rentalPropertyResponseDto);
 
-        mockMvc.perform(get("/api/rental-properties/{id}", id))
+        mockMvc.perform(get("/rent-properties-api/rental-properties/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(readResource(rentalProperty)));
 
@@ -94,9 +94,10 @@ class RentalPropertyResourceTest {
 
         when(rentalPropertyRepository.findById(Integer.valueOf(id))).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/rental-properties/{id}", id))
+        System.out.println(mockMvc.perform(get("/rent-properties-api/rental-properties/{id}", id))
                 .andExpect(status().isNotFound())
-                .andExpect(content().json("{\"message\":\"Le bien immobilier " + id + " est introuvable\"}"));
+                .andExpect(content().json("{\"message\":\"Le bien immobilier " + id + " est introuvable\"}"))
+                .andReturn());
 
         verify(rentalPropertyRepository).findById(Integer.valueOf(id));
         verifyNoInteractions(rentalPropertyDtoMapper);
@@ -113,7 +114,7 @@ class RentalPropertyResourceTest {
         when(rentalPropertyRepository.save(rentalPropertyEntity)).thenReturn(rentalPropertyEntity);
         when(rentalPropertyDtoMapper.mapToDto(rentalPropertyEntity)).thenReturn(rentalPropertyResponseDto);
 
-        mockMvc.perform(post("/api/rental-properties")
+        mockMvc.perform(post("/rent-properties-api/rental-properties")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(readResource(rentalPropertyRequest)))
                 .andExpect(status().isCreated())
@@ -127,7 +128,7 @@ class RentalPropertyResourceTest {
 
     @Test
     void givenInvalidRequestBody_shouldReturn404HttpStatusCode() throws Exception {
-        mockMvc.perform(post("/api/rental-properties")
+        mockMvc.perform(post("/rent-properties-api/rental-properties")
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(readResource(invalidRentalPropertyRequest)))
                 .andExpect(status().isBadRequest())

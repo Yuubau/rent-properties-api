@@ -8,13 +8,13 @@ class ErrorHandlerTest {
 
     @Test
     void shouldHandleNotFoundRentalPropertyException() {
-        String message = "";
+        String message = "Test";
 
         ErrorHandler errorHandler = new ErrorHandler();
 
         ErrorDto errorDto = errorHandler.handleNotFoundRentalPropertyException(new NotFoundRentalPropertyException(message));
 
-        Assertions.assertEquals(errorDto.message(), message);
+        Assertions.assertEquals(errorDto.getMessage(), message);
     }
 
     @Test
@@ -25,7 +25,7 @@ class ErrorHandlerTest {
 
         ErrorDto errorDto = errorHandler.handleMethodArgumentNotValidException();
 
-        Assertions.assertEquals(errorDto.message(), message);
+        Assertions.assertEquals(errorDto.getMessage(), message);
     }
 
 }
