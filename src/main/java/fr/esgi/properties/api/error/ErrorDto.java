@@ -7,9 +7,13 @@ import lombok.Setter;
 
 import java.util.Objects;
 
-@AllArgsConstructor
 @Getter
 public class ErrorDto {
-    public String message;
+    private String message;
+    public ErrorDto(String message) {
+        this.message = message;
+    }
+
+
 
 }
