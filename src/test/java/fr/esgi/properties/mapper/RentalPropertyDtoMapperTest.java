@@ -48,4 +48,28 @@ class RentalPropertyDtoMapperTest {
                 );
     }
 
+    @Test
+    void shouldMapToEntity() {
+        List<RentalPropertyEntity> rentalPropertyEntities = rentalPropertyEntities();
+
+        RentalPropertyDtoMapper rentalPropertyDtoMapper = new RentalPropertyDtoMapper();
+
+        List<RentalPropertyResponseDto> rentalPropertyResponseList = rentalPropertyDtoMapper.mapToDtoList(rentalPropertyEntities);
+
+        assertThat(rentalPropertyResponseList).isNotNull()
+                .hasSize(1)
+                .extracting("description", "address", "town", "propertyType", "rentAmount", "securityDepositAmount", "area")
+                .containsExactlyInAnyOrder(
+                        tuple("Appartement spacieux avec vue sur l'ESGI",
+                                "77 Rue des roses",
+                                "Paris",
+                                "Appartement",
+                                750.90,
+                                1200.90,
+                                37.48)
+                );
+
+        rentalPropertyDtoMapper.mapToEntity(rentalPropertyResponseList.get(0))
+    }
+
 }
