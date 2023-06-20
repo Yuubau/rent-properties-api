@@ -36,7 +36,7 @@ public class RentalPropertyResource {
 
     @GetMapping("/rental-properties/{id}")
     public RentalPropertyResponseDto getRentalPropertyById(@PathVariable String id) {
-        return rentalPropertyRepository.findById(UUID.fromString(id))
+        return rentalPropertyRepository.findById(Integer.valueOf(id))
                 .map(rentalPropertyDtoMapper::mapToDto)
                 .orElseThrow(() -> new NotFoundRentalPropertyException("Le bien immobilier " + id + " est introuvable"));
     }
@@ -48,7 +48,7 @@ public class RentalPropertyResource {
 
         RentalPropertyEntity savedRentalProperty = rentalPropertyRepository.save(rentalPropertyEntity);
 
-        return rentalPropertyDtoMapper.mapToDto(savedRentalProperty);
+        return  rentalPropertyDtoMapper.mapToDto(savedRentalProperty);
     }
 
 }
