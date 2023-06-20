@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("/rent-properties-api")
@@ -36,8 +37,8 @@ public class RentalPropertyResource {
     }
 
     @GetMapping("/rental-properties/{id}")
-    public RentalPropertyResponseDto getRentalPropertyById(@PathVariable String id) {
-        return rentalPropertyRepository.findById(Integer.valueOf(id))
+    public RentalPropertyResponseDto getRentalPropertyById(@PathVariable Integer id) {
+        return rentalPropertyRepository.findById(id)
                 .map(rentalPropertyDtoMapper::mapToDto)
                 .orElseThrow(() -> new NotFoundRentalPropertyException("Le bien immobilier " + id + " est introuvable"));
     }
@@ -77,6 +78,18 @@ public class RentalPropertyResource {
             throw new NotFoundRentalPropertyException("Le bien immobilier " + id + " est introuvable");
         }
 
+    }
+
+    @DeleteMapping("/rental-properties/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void createRentalProperty(@Valid @RequestBody RentalPropertyRequestDto rentalPropertyRequestDto, @Valid @PathVariable Integer id) {
+
+        Optional<RentalPropertyEntity> res = rentalPropertyRepository.findById(id);
+        if(res.isPresent()) {
+            rentalPropertyRepository.delete(res.get());
+        } else {
+            return;
+        }
     }
 
 }

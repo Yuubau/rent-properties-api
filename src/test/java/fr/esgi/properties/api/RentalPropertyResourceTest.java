@@ -207,4 +207,27 @@ class RentalPropertyResourceTest {
 
     }
 
+    @Test
+    void shouldDeleteRentalProperty() throws Exception {
+
+        String id = "1";
+
+        mockMvc.perform(delete("/rent-properties-api/rental-properties/{id}", id)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(readResource(rentalPropertyRequest)))
+                .andExpect(status().isNoContent());
+
+ }
+
+    @Test
+    void shouldDeleteRentalPropertyButNotFound() throws Exception {
+        String id = "2";
+
+        mockMvc.perform(delete("/rent-properties-api/rental-properties/{id}", id)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(readResource(rentalPropertyRequest)))
+                .andExpect(status().isNoContent());
+
+    }
+
 }
