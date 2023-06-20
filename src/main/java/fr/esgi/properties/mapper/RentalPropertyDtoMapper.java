@@ -41,7 +41,7 @@ public class RentalPropertyDtoMapper {
                 rentalPropertyRequestDto.bedroomsCount(),
                 rentalPropertyRequestDto.floorNumber(),
                 rentalPropertyRequestDto.numberOfFloors(),
-                rentalPropertyRequestDto.constructionYear(),
+                Character.forDigit(rentalPropertyRequestDto.constructionYear(), 10) ,
                 new EnergyClassificationEntity(rentalPropertyRequestDto.energyClassification()),
                 rentalPropertyRequestDto.hasElevator(),
                 rentalPropertyRequestDto.hasIntercom(),

@@ -149,7 +149,7 @@ class RentalPropertyResourceTest {
         mockMvc.perform(put("/rent-properties-api/rental-properties/{id}", 1)
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(readResource(rentalPropertyRequest)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().json(readResource(rentalProperty)));
 
         verify(rentalPropertyDtoMapper).mapToEntity(rentalPropertyRequestDto);
@@ -170,7 +170,7 @@ class RentalPropertyResourceTest {
         mockMvc.perform(put("/rent-properties-api/rental-properties/" + 2)
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(readResource(rentalPropertyRequest)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().json(readResource(rentalProperty)));
 
         verify(rentalPropertyDtoMapper).mapToEntity(rentalPropertyRequestDto);

@@ -54,16 +54,9 @@ public class RentalPropertyResource {
     }
 
     @PutMapping("/rental-properties/{id}")
-    @ResponseStatus(CREATED)
     public RentalPropertyResponseDto createOrUpdateRentalProperty(@Valid @RequestBody RentalPropertyRequestDto rentalPropertyRequestDto, @Valid @PathVariable Integer id) {
-        Optional<RentalPropertyEntity> opEntity = rentalPropertyRepository.findById(id);
-        RentalPropertyEntity entity = null;
-        if(opEntity.isPresent()) {
-            entity = opEntity.get();
-        } else {
-            entity = rentalPropertyDtoMapper.mapToEntity(rentalPropertyRequestDto);
-            entity.setId(id);
-        }
+        RentalPropertyEntity entity = rentalPropertyDtoMapper.mapToEntity(rentalPropertyRequestDto);
+        entity.setId(id);
         RentalPropertyEntity savedRentalProperty = rentalPropertyRepository.save(entity);
         return  rentalPropertyDtoMapper.mapToDto(savedRentalProperty);
     }
@@ -82,7 +75,7 @@ public class RentalPropertyResource {
 
     @DeleteMapping("/rental-properties/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void createRentalProperty(@Valid @RequestBody RentalPropertyRequestDto rentalPropertyRequestDto, @Valid @PathVariable Integer id) {
+    public void deleteRentalProperty(@Valid @PathVariable Integer id) {
 
         Optional<RentalPropertyEntity> res = rentalPropertyRepository.findById(id);
         if(res.isPresent()) {

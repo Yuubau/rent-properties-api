@@ -14,9 +14,10 @@ import java.util.UUID;
 @Table(name = "property_type")
 public class PropertyTypeEntity {
 
-    @GeneratedValue
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id",unique=true, nullable = false)
     private Integer id;
 
     @Column(name = "designation", length = 5)
