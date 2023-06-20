@@ -7,11 +7,13 @@ import fr.esgi.properties.exception.NotFoundRentalPropertyException;
 import fr.esgi.properties.mapper.RentalPropertyDtoMapper;
 import fr.esgi.properties.repository.RentalPropertyRepository;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.beans.PropertyDescriptor;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -62,14 +64,30 @@ public class RentalPropertyResource {
     }
 
     @PatchMapping("/rental-properties/{id}")
-    public RentalPropertyResponseDto updateRentalProperty(@Valid @RequestBody RentalPropertyRequestDto rentalPropertyRequestDto, @Valid @PathVariable Integer id) {
+    public RentalPropertyResponseDto updateRentalProperty(@RequestBody RentalPropertyRequestDto rentalPropertyRequestDto, @Valid @PathVariable Integer id) {
         Optional<RentalPropertyEntity> opEntity = rentalPropertyRepository.findById(id);
-        if(opEntity.isPresent()) {
-            RentalPropertyEntity savedRentalProperty = rentalPropertyRepository.save(opEntity.get());
-            return  rentalPropertyDtoMapper.mapToDto(savedRentalProperty);
-        } else {
+
+        if(opEntity.isEmpty()) {
             throw new NotFoundRentalPropertyException("Le bien immobilier " + id + " est introuvable");
         }
+
+        BeanWrapper beanWrapper = new BeanWrapperImpl(rentalPropertyRequestDto);
+        PropertyDescriptor[] propertyDescriptors = beanWrapper.getPropertyDescriptors();
+
+        Set<String> emptyProperties = new HashSet<>();
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            Object propertyValue = beanWrapper.getPropertyValue(propertyDescriptor.getName());
+            if (propertyValue == null) {
+                emptyProperties.add(propertyDescriptor.getName());
+            }
+        }
+
+        RentalPropertyEntity entity = opEntity.get();
+
+        String[] empty = emptyProperties.toArray(new String[0]);
+        BeanUtils.copyProperties(rentalPropertyRequestDto, entity, empty);
+        rentalPropertyRepository.save(entity);
+        return rentalPropertyDtoMapper.mapToDto(entity);
 
     }
 

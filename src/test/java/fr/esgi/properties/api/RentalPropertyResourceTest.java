@@ -191,9 +191,8 @@ class RentalPropertyResourceTest {
         mockMvc.perform(patch("/rent-properties-api/rental-properties/{id}", id)
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(readResource(rentalPropertyRequest)))
-                .andExpect(status().isOk())
-                .andExpect(content().string(""));
-    }
+                .andExpect(status().isOk());
+        }
 
     @Test
     void shouldThrowRentalProperty() throws Exception {
