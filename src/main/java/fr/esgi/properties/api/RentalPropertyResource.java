@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -49,6 +50,33 @@ public class RentalPropertyResource {
         RentalPropertyEntity savedRentalProperty = rentalPropertyRepository.save(rentalPropertyEntity);
 
         return  rentalPropertyDtoMapper.mapToDto(savedRentalProperty);
+    }
+
+    @PutMapping("/rental-properties/{id}")
+    @ResponseStatus(CREATED)
+    public RentalPropertyResponseDto createOrUpdateRentalProperty(@Valid @RequestBody RentalPropertyRequestDto rentalPropertyRequestDto, @Valid @PathVariable Integer id) {
+        Optional<RentalPropertyEntity> opEntity = rentalPropertyRepository.findById(id);
+        RentalPropertyEntity entity = null;
+        if(opEntity.isPresent()) {
+            entity = opEntity.get();
+        } else {
+            entity = rentalPropertyDtoMapper.mapToEntity(rentalPropertyRequestDto);
+            entity.setId(id);
+        }
+        RentalPropertyEntity savedRentalProperty = rentalPropertyRepository.save(entity);
+        return  rentalPropertyDtoMapper.mapToDto(savedRentalProperty);
+    }
+
+    @PatchMapping("/rental-properties/{id}")
+    public RentalPropertyResponseDto updateRentalProperty(@Valid @RequestBody RentalPropertyRequestDto rentalPropertyRequestDto, @Valid @PathVariable Integer id) {
+        Optional<RentalPropertyEntity> opEntity = rentalPropertyRepository.findById(id);
+        if(opEntity.isPresent()) {
+            RentalPropertyEntity savedRentalProperty = rentalPropertyRepository.save(opEntity.get());
+            return  rentalPropertyDtoMapper.mapToDto(savedRentalProperty);
+        } else {
+            throw new NotFoundRentalPropertyException("Le bien immobilier " + id + " est introuvable");
+        }
+
     }
 
 }

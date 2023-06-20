@@ -23,8 +23,7 @@ import static fr.esgi.properties.samples.RentalPropertyEntitySample.rentalProper
 import static fr.esgi.properties.utils.TestUtils.readResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -135,6 +134,77 @@ class RentalPropertyResourceTest {
                 .andExpect(content().json("{\"message\": \"La requête envoyée est invalide\"}"));
 
         verifyNoInteractions(rentalPropertyDtoMapper, rentalPropertyRepository);
+    }
+
+    @Test
+    void shouldUpdateIfExistsRentalProperty() throws Exception {
+        RentalPropertyRequestDto rentalPropertyRequestDto = oneRentalPropertyRequest();
+        RentalPropertyResponseDto rentalPropertyResponseDto = oneRentalPropertyResponse();
+        RentalPropertyEntity rentalPropertyEntity = oneRentalPropertyEntity();
+
+        when(rentalPropertyDtoMapper.mapToEntity(rentalPropertyRequestDto)).thenReturn(rentalPropertyEntity);
+        when(rentalPropertyRepository.save(rentalPropertyEntity)).thenReturn(rentalPropertyEntity);
+        when(rentalPropertyDtoMapper.mapToDto(rentalPropertyEntity)).thenReturn(rentalPropertyResponseDto);
+
+        mockMvc.perform(put("/rent-properties-api/rental-properties/{id}", 1)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(readResource(rentalPropertyRequest)))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(readResource(rentalProperty)));
+
+        verify(rentalPropertyDtoMapper).mapToEntity(rentalPropertyRequestDto);
+        verify(rentalPropertyRepository).save(rentalPropertyEntity);
+        verify(rentalPropertyDtoMapper).mapToDto(rentalPropertyEntity);
+    }
+
+    @Test
+    void shouldSaveIfNotExistsRentalProperty() throws Exception {
+        RentalPropertyRequestDto rentalPropertyRequestDto = oneRentalPropertyRequest();
+        RentalPropertyResponseDto rentalPropertyResponseDto = oneRentalPropertyResponse();
+        RentalPropertyEntity rentalPropertyEntity = oneRentalPropertyEntity();
+
+        when(rentalPropertyDtoMapper.mapToEntity(rentalPropertyRequestDto)).thenReturn(rentalPropertyEntity);
+        when(rentalPropertyRepository.save(rentalPropertyEntity)).thenReturn(rentalPropertyEntity);
+        when(rentalPropertyDtoMapper.mapToDto(rentalPropertyEntity)).thenReturn(rentalPropertyResponseDto);
+
+        mockMvc.perform(put("/rent-properties-api/rental-properties/" + 2)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(readResource(rentalPropertyRequest)))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(readResource(rentalProperty)));
+
+        verify(rentalPropertyDtoMapper).mapToEntity(rentalPropertyRequestDto);
+        verify(rentalPropertyRepository).save(rentalPropertyEntity);
+        verify(rentalPropertyDtoMapper).mapToDto(rentalPropertyEntity);
+    }
+
+    @Test
+    void shouldUpdateRentalProperty() throws Exception {
+        RentalPropertyEntity rentalPropertyEntity = oneRentalPropertyEntity();
+        RentalPropertyResponseDto rentalPropertyResponseDto = oneRentalPropertyResponse();
+
+        String id = "1";
+
+        when(rentalPropertyRepository.findById(Integer.valueOf(id))).thenReturn(Optional.of(rentalPropertyEntity));
+        when(rentalPropertyDtoMapper.mapToDto(rentalPropertyEntity)).thenReturn(rentalPropertyResponseDto);
+
+        mockMvc.perform(patch("/rent-properties-api/rental-properties/{id}", id)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(readResource(rentalPropertyRequest)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    void shouldThrowRentalProperty() throws Exception {
+        String id = "2";
+
+        mockMvc.perform(patch("/rent-properties-api/rental-properties/{id}", id)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(readResource(rentalPropertyRequest)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{\"message\": \"Le bien immobilier 2 est introuvable\"}"));
+
     }
 
 }
